@@ -1,0 +1,50 @@
+  for i in range(self.n):
+            
+            if not self.visited[i] and self.graph[curr_pos][i] > 0:
+                self.visited[i] = True
+                self.tsp_bnb(i, count + 1, cost + self.graph[curr_pos][i], path + [i])
+                self.visited[i] = False  
+
+    def solve(self):
+        self.visited[0] = True  
+        self.tsp_bnb(0, 1, 0, [0])  
+        return self.min_cost
+
+
+def tsp_branch_and_bound():
+    def input_graph():
+       
+        n = int(input("\nEnter the number of cities: "))
+        graph = []
+        print("Enter the distance matrix (use 0 for no connection between cities):")
+        for i in range(n):
+            row = list(map(int, input(f"Row {i+1}: ").split()))
+            graph.append(row)
+        return graph, n
+
+    while True:
+        print("\nMenu:")
+        print("1. Solve TSP using Branch and Bound")
+        print("2. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            graph, n = input_graph()
+
+           
+            if any(len(row) != n for row in graph):
+                print("Error: The matrix must be square!")
+                continue
+
+            
+            tsp_solver = TSPBranchAndBound(graph, n)
+            result = tsp_solver.solve()
+            print(f"Optimal cost using Branch and Bound: {result}")
+        elif choice == '2':
+            print("Exiting the program. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+
+tsp_branch_and_bound()
