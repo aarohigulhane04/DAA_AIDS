@@ -1,0 +1,44 @@
+def knapsack_BT(weights, values, capacity, n):
+    def BT(i, curr_weight, curr_value, selected):
+        if i == n or curr_weight == capacity:
+            return curr_value, selected
+        
+       
+        if weights[i] + curr_weight <= capacity:
+            include_value, include_selected = BT(
+                i + 1, 
+                curr_weight + weights[i], 
+                curr_value + values[i], 
+                selected + [(weights[i], values[i])]  
+            )
+        else:
+            include_value, include_selected = 0, selected
+
+        
+        exclude_value, exclude_selected = BT(i + 1, curr_weight, curr_value, selected)
+
+        
+        if include_value > exclude_value:
+            return include_value, include_selected
+        else:
+            return exclude_value, exclude_selected
+
+    
+    max_profit, selected_items = BT(0, 0, 0, [])
+    return max_profit, selected_items
+
+
+
+n = int(input("Enter total number of items: "))
+weights = list(map(int, input(f"Enter weights of {n} items: ").split()))
+values = list(map(int, input(f"Enter values of {n} items: ").split()))
+capacity = int(input("Enter max capacity of the bag: "))
+
+
+max_profit, selected_items = knapsack_BT(weights, values, capacity, n)
+
+
+print("Max profit:", max_profit)
+print("Selected items (weight, value):")
+for weight, value in selected_items:
+    print(f"Weight: {weight}, Value: {value}")
