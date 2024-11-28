@@ -1,0 +1,60 @@
+
+def find_all_subsets(arr, n, target_sum):
+    
+    dp = [[False for _ in range(target_sum + 1)] for _ in range(n + 1)]
+
+    
+    for i in range(n + 1):
+        dp[i][0] = True
+
+    
+    for i in range(1, n + 1):
+        for j in range(1, target_sum + 1):
+            if arr[i - 1] <= j:
+                dp[i][j] = dp[i - 1][j] or dp[i - 1][j - arr[i - 1]]
+            else:
+                dp[i][j] = dp[i - 1][j]
+
+    
+    if not dp[n][target_sum]:
+        return []
+
+    
+    def backtrack(i, j, current_subset):
+       
+        if i == 0 and j == 0:
+            all_solutions.append(current_subset)
+            return
+
+        if dp[i - 1][j]:
+            backtrack(i - 1, j, current_subset[:])
+
+        
+        if j >= arr[i - 1] and dp[i - 1][j - arr[i - 1]]:
+            backtrack(i - 1, j - arr[i - 1], current_subset + [arr[i - 1]])
+
+    
+    all_solutions = []
+    
+    
+    backtrack(n, target_sum, [])
+
+    return all_solutions
+
+
+def find_subset_sum():
+    n = int(input("Enter the number of elements in the set: "))
+    arr = list(map(int, input(f"Enter {n} positive integers (space-separated): ").split()))
+    target_sum = int(input("Enter the target sum: "))
+
+    solutions = find_all_subsets(arr, n, target_sum)
+
+    if solutions:
+        print(f"\nTotal number of subsets with sum {target_sum}: {len(solutions)}")
+        for i, subset in enumerate(solutions, 1):
+            print(f"Subset {i}: {subset}")
+    else:
+        print(f"No subset exists with sum {target_sum}.")
+
+
+find_subset_sum()
