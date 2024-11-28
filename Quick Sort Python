@@ -1,0 +1,81 @@
+import random
+import time
+import matplotlib.pyplot as plt
+
+def quicksort(arr):
+    if len(arr) <= 1:
+        return arr
+    
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    
+    return quicksort(left) + middle + quicksort(right)
+
+
+def execution_time(arr):
+    start_time = time.time()
+    sorted_arr = quicksort(arr)
+    end_time = time.time()
+    return sorted_arr, end_time - start_time
+
+
+def option1():
+    size = int(input("Enter size of the array: "))
+    arr = [random.randint(1, 500) for _ in range(size)]
+    
+    print("Generated list:", arr)
+    
+    # Measure execution time and sort the array
+    sorted_arr, exec_time = execution_time(arr)
+    
+    print("Sorted list:", sorted_arr)
+    print(f"Execution time: {exec_time:.6f} seconds")
+
+
+def option2():
+    num=int(input("Enter num of array to analysis execution time : "))
+    sizes=[]
+    times=[]
+    for i in range(1,num+1) :
+        s=int(input(f"Enter size of list {i} : "))
+        sizes.append(s)
+        arr=[random.randint(1,500)for _ in range (s)]
+       # print(f"Generted list {i}:",arr)
+
+        sorted_arr, exec_time = execution_time(arr)
+        times.append(exec_time)
+        #print(f"Sorted list {1} ",quicksort(arr))
+        print(f"Execution time for list {i} : {exec_time:.6f} seconds")
+
+    plt.figure(figsize=(10,6))
+    plt.plot(sizes,times,marker="o",linestyle='-',color='r',label='execution time')
+    
+
+    plt.title("Execution Time vs. Array Size")
+    plt.xlabel("Array size")
+    plt.ylabel("Execution time")
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+
+def menu():
+    print("1.Sort array")
+    print("2.Sort multiple array and compaer time")
+    print("3.Exit")
+
+
+while True :
+    menu()
+    choice=int(input("Enter your choice :"))
+    if choice==1:
+        option1()
+    elif choice==2:
+        option2()
+    elif choice==3:
+        print("exiting.....")
+        break
+    else :
+        print("Invalid choice")
