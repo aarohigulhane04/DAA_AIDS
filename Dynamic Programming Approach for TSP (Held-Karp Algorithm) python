@@ -1,0 +1,56 @@
+import sys
+
+def tsp_dynamic_programming():
+    def input_graph():
+       
+        n = int(input("\nEnter the number of cities: "))
+        graph = []
+        print("Enter the distance matrix (use 0 for no connection between cities):")
+        for i in range(n):
+            row = list(map(int, input(f"Row {i+1}: ").split()))
+            graph.append(row)
+        return graph, n
+
+    def tsp_dp(graph, n):
+        
+        dp = [[float('inf')] * (1 << n) for _ in range(n)]
+        dp[0][1] = 0  
+
+        
+        for mask in range(1 << n):
+            for u in range(n):
+                if mask & (1 << u):  
+                    for v in range(n):
+                        if mask & (1 << v) and u != v and graph[v][u] > 0: 
+                            dp[u][mask] = min(dp[u][mask], dp[v][mask ^ (1 << u)] + graph[v][u])
+
+        
+        return min(dp[i][(1 << n) - 1] + graph[i][0] for i in range(1, n) if graph[i][0] > 0)
+
+    while True:
+        print("\nMenu:")
+        print("1. Solve TSP using Dynamic Programming")
+        print("2. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            graph, n = input_graph()
+            
+            
+            if any(len(row) != n for row in graph):
+                print("Error: The matrix must be square!")
+                continue
+            
+            try:
+                result = tsp_dp(graph, n)
+                print(f"Optimal cost using Dynamic Programming: {result}")
+            except ValueError:
+                print("Error: Invalid input or no valid TSP path found!")
+        elif choice == '2':
+            print("Exiting the program. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+
+tsp_dynamic_programming()
