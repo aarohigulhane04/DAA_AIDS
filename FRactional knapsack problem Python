@@ -1,0 +1,66 @@
+def knapsack_greedy(weights, values, capacity):
+    n = len(weights)
+   
+    items = [(values[i] / weights[i], weights[i], values[i]) for i in range(n)]
+    
+    items.sort(reverse=True, key=lambda x: x[0])
+
+    total_weight = 0
+    total_value = 0
+
+    for ratio, weight, value in items:
+        if total_weight + weight <= capacity:
+            
+            total_value += value
+            total_weight += weight
+        else:
+            
+            remain = capacity - total_weight
+            total_value += value * (remain / weight)
+            total_weight += remain
+            break
+
+    return total_weight, total_value
+
+
+
+def display_menu():
+    print("\n--- Knapsack Problem Solver ---")
+    print("1. Enter items and solve knapsack")
+    print("2. Exit")
+    return int(input("Enter your choice: "))
+
+
+def option1():
+    n = int(input("Enter total number of items: "))
+    weights = []
+    values = []
+    for i in range(n):
+        weight = int(input(f"Enter weight of item {i+1}: "))
+        value = int(input(f"Enter value of item {i+1}: "))
+        weights.append(weight)
+        values.append(value)
+
+    capacity = int(input("Enter maximum capacity of bag: "))
+
+    
+    total_weight, total_value = knapsack_greedy(weights, values, capacity)
+
+    print(f"\nTotal weight of bag: {total_weight}")
+    print(f"Maximum value that can be obtained: {total_value:.2f}")
+
+
+while True:
+    try:
+        choice = display_menu()
+
+        if choice == 1:
+            option1()
+        elif choice == 2:
+            print("Exiting the program. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
